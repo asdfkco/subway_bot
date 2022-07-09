@@ -1,5 +1,4 @@
-import discord
-import asyncio
+import discord,asyncio,json
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix="!")
@@ -15,4 +14,9 @@ async  def on_ready():
 async def 안녕(ctx):
     await ctx.send("안녕")
 
-bot.run("OTkwOTkxODg1MDcxOTc0NDcw.GF8N89.rr5gVjfQ4WX4rEa5o3zQZdBRkw7BhmZ8YvHISA")
+
+with open("./token/token.json") as file:
+    bot = json.load(file)
+    token = bot["token"]
+
+bot.run(token)

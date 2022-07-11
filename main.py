@@ -1,49 +1,19 @@
+import json
+from turtle import end_fill
 import discord
-import asyncio
-import numpy as np
-
+import requests
+import math
 from discord.ext import commands
-client = commands.Bot(command_prefix='!')
 
-@client.event
-async def on_ready():
-    print('Loggend in Bot: ', client.user.name)
-    print('Bot id: ', client.user.id)
-    print('connection was succesful!')
-    print('=' * 30)
+with open ("./token/token.json", "r") as f:
+    token = json.load(f)
+    
+key = token["key"]
 
-@client.event
-async def on_message(message):
-    if message.author != client.user:
-        message_contents = message.content
-        print(message_contents)
-        return
-        
-    elif message.content.startswith("6호선"):
-        embed = discord.Embed(title="6호선", description="6호선 시간표", color=0xAAFFFF)
-        embed.add_field(name="응암순환행", value="2분후 도착 예정", inline=True)
-        embed.add_field(name="응암순환행", value="5분후 도착 예정", inline=True)
-        embed.add_field(name="응암순환행", value="8분후 도착 예정", inline=True)
-        embed.add_field(name="봉화산행", value="1분후 도착 예정", inline=True)
-        embed.add_field(name="봉화산행", value="4분후 도착 예정", inline=True)
-        embed.add_field(name="봉화산행", value="8분후 도착 예정", inline=True)
-        embed.set_footer(text="하단 설명")
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/995846401953103894/995846743457546280/unknown.png")
-        await message.channel.send(embed=embed)
-        
-
-
-
-
-client.run()
-
-
-key = ""
-
-url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/0/8/{location}"
+global line,arrivalCode,img
 
 line = {"1001":"1호선","1002":"2호선","1003":"3호선","1004":"4호선","1005":"5호선","1006":"6호선","1007":"7호선","1008":"8호선","1009":"9호선","1075":"분당선","1077":"신분당선","1091":"자기부상선"
-        ,"1092":"우이신설선","1163":"경의중앙선","1165":"공항철도","1167":"경춘선"}      
+        ,"1092":"우이신설선","1063":"경의중앙선","1065":"공항철도","1067":"경춘선"}      
 
 arrivalCode = {"0":"진입", "1":"도착", "2":"출발", "3":"전역출발", "4":"전역진입", "5":"전역도착", "99":"운행중"}
 
@@ -64,20 +34,69 @@ img = {"1호선":"https://cdn.discordapp.com/attachments/995846401953103894/9958
        "우이신설선":"https://cdn.discordapp.com/attachments/995846401953103894/995846577119821824/827eabbd4c5d6605.png",
        "자기부상선":"https://cdn.discordapp.com/attachments/995846401953103894/995846577350512660/6ae5b62834f9bc80.png"
        }
+    
+client = commands.Bot(command_prefix='!')
 
-response = requests.get(url)
-result = json.loads(response.text)
-for element in result["realtimeArrivalList"]:
-        print(line[element["subwayId"]])
-        print(element["trainLineNm"])
-        if(element["btrainSttus"]!=None):
-                print(element["btrainSttus"])
-        if(int(element["barvlDt"])>=60):        
-                print(math.trunc(int(element["barvlDt"])/60),"분",int(element["barvlDt"])%60,"초")
-        else:
-                print(element["barvlDt"]+"초")
-        print(element["statnNm"])
-        print(element["arvlMsg2"])
-        print(element["arvlMsg3"])
-        print(arrivalCode[element["arvlCd"]])
-        print("-----------------")
+@client.event
+async def on_ready():
+    print('Loggend in Bot: ', client.user.name)
+    print('Bot id: ', client.user.id)
+    print('connection was succesful!')
+    print('=' * 30)
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    elif message.content.startswith("!"):
+        location = message.content.replace("!","")
+        url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/1/8/{location}"
+        print(location)
+        response = requests.get(url)
+        result = json.loads(response.text)
+        print(url)
+        # for element in result["realtimeArrivalList"]:
+        #         if(int(element["barvlDt"])>=60):        
+        #                 time = math.trunc(int(element["barvlDt"])/60),"분",int(element["barvlDt"])%60,"초"
+        #         else:
+        #                 time = element["barvlDt"]+"초"
+        #         embed = discord.Embed(title=line[element["subwayId"]], description="6호선 시간표", color=0xAAFFFF)
+        #         embed.add_field(name=element["trainLineNm"], value=time, inline=True)
+        #         embed.add_field(name=element["statnNm"], value=element["arvlMsg2"], inline=True)
+        #         embed.add_field(name=element["arvlMsg3"], value=arrivalCode[element["arvlCd"]], inline=True)
+        #         if(element["btrainSttus"]!=None):
+        #                 embed.add_field(name=element["btrainSttus"], value="", inline=True)
+                        
+        #         embed.set_footer(text="하단 설명")
+        #         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/995846401953103894/995846743457546280/unknown.png")
+        #         await message.channel.send(embed=embed)
+        
+        
+        
+        ### 그 뭐냐 머시기 0초는 안뜨게 하기
+        for element in result["realtimeArrivalList"]:
+                if(int(element["barvlDt"])>=60):        
+                        time = math.trunc(int(element["barvlDt"])/60),"분",int(element["barvlDt"])%60,"초"
+                elif(element["barvlDt"]==0):
+                        pass
+                else:
+                        time = element["barvlDt"]+"초"
+                embed = discord.Embed(title=line[element["subwayId"]], color=0xAAFFFF)
+                embed.add_field(name=element["trainLineNm"], value=time, inline=True)
+                # embed.add_field(name=element["statnNm"], value=element["arvlMsg2"], inline=True)
+                # embed.add_field(name=element["arvlMsg3"], value=arrivalCode[element["arvlCd"]], inline=True)
+                # if(element["btrainSttus"]!=None):
+                #         embed.add_field(name=element["btrainSttus"], value="", inline=True)
+                embed.set_footer(text="하단 설명")
+                embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/995846401953103894/995846743457546280/unknown.png")
+                await message.channel.send(embed=embed)
+ 
+                
+    
+
+
+
+client.run(token["token"])
+
+
+

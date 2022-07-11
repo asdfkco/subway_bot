@@ -2,7 +2,14 @@ import requests
 import json
 import math
 
+
+
 location = input()
+
+with open ("./token/token.json", "r") as f:
+    token = json.load(f)
+    
+key = token["key"]
 
 url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/0/8/{location}"
 

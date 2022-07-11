@@ -1,5 +1,4 @@
 import json
-from turtle import end_fill
 import discord
 import requests
 import math
@@ -50,45 +49,33 @@ async def on_message(message):
         return
     elif message.content.startswith("!"):
         location = message.content.replace("!","")
-        url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/1/8/{location}"
+        url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/1/5/{location}"
         print(location)
         response = requests.get(url)
         result = json.loads(response.text)
         print(url)
-        # for element in result["realtimeArrivalList"]:
-        #         if(int(element["barvlDt"])>=60):        
-        #                 time = math.trunc(int(element["barvlDt"])/60),"분",int(element["barvlDt"])%60,"초"
-        #         else:
-        #                 time = element["barvlDt"]+"초"
-        #         embed = discord.Embed(title=line[element["subwayId"]], description="6호선 시간표", color=0xAAFFFF)
-        #         embed.add_field(name=element["trainLineNm"], value=time, inline=True)
-        #         embed.add_field(name=element["statnNm"], value=element["arvlMsg2"], inline=True)
-        #         embed.add_field(name=element["arvlMsg3"], value=arrivalCode[element["arvlCd"]], inline=True)
-        #         if(element["btrainSttus"]!=None):
-        #                 embed.add_field(name=element["btrainSttus"], value="", inline=True)
-                        
-        #         embed.set_footer(text="하단 설명")
-        #         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/995846401953103894/995846743457546280/unknown.png")
-        #         await message.channel.send(embed=embed)
         
         
         
         ### 그 뭐냐 머시기 0초는 안뜨게 하기
+        global time
+        time = "_ _"
         for element in result["realtimeArrivalList"]:
                 if(int(element["barvlDt"])>=60):        
-                        time = math.trunc(int(element["barvlDt"])/60),"분",int(element["barvlDt"])%60,"초"
-                elif(element["barvlDt"]==0):
-                        pass
+                        time = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
                 else:
                         time = element["barvlDt"]+"초"
-                embed = discord.Embed(title=line[element["subwayId"]], color=0xAAFFFF)
-                embed.add_field(name=element["trainLineNm"], value=time, inline=True)
-                # embed.add_field(name=element["statnNm"], value=element["arvlMsg2"], inline=True)
-                # embed.add_field(name=element["arvlMsg3"], value=arrivalCode[element["arvlCd"]], inline=True)
-                # if(element["btrainSttus"]!=None):
-                #         embed.add_field(name=element["btrainSttus"], value="", inline=True)
-                embed.set_footer(text="하단 설명")
-                embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/995846401953103894/995846743457546280/unknown.png")
+                embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
+                if(time!="0초"):
+                        embed.add_field(name=element["trainLineNm"], value=time, inline=False)
+                else:        
+                        pass
+                embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
+                embed.add_field(name=element["bstatnNm"], value="arrivalCode[element["arvlCd"]]", inline=False)
+                if(element["btrainSttus"]!=None):
+                        embed.set_footer(text=element["btrainSttus"])
+                embed.set_thumbnail(url=img[line[element["subwayId"]]])
+                print(element["subwayId"])
                 await message.channel.send(embed=embed)
  
                 

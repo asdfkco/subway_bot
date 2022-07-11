@@ -38,7 +38,7 @@ async def on_message(message):
 client.run()
 
 
-key = "5450736268726c6138306668594453"
+key = ""
 
 url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/0/8/{location}"
 

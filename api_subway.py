@@ -3,7 +3,6 @@ import json
 import math
 
 location = input()
-key = "5450736268726c6138306668594453"
 
 url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/0/8/{location}"
 

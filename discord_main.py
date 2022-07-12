@@ -1,4 +1,5 @@
 import json
+from xml.dom.minidom import Element
 import discord
 import requests
 import math
@@ -67,61 +68,109 @@ async def on_message(message):
     if message.author == client.user:
         return
     elif message.content.startswith("!"):
-        location = message.content.replace("!","")
-        url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/1/6/{location}"
-        print(location)
-        response = requests.get(url)
-        result = json.loads(response.text)
-        print(url)
-        
+        with open ("./token/신정(은행정).json", "r",encoding="UTF-8") as f:
+                result = json.load(f)
+        # location = message.content.replace("!","")
+        # url = f"http://swopenAPI.seoul.go.kr/api/subway/{key}/json/realtimeStationArrival/1/6/{location}"
+        # print(location)
+        # response = requests.get(url)
+        # result = json.loads(response.text)
+        # print(url)
         
         
         global time_
         time_ = "_ _"
-        for element in result["realtimeArrivalList"]:
-                if((element[1].replace(" (급행)",""))==(element[1]).replace(" (급행)","")):
-                        if(int(element["barvlDt"])>=60):        
-                                if(int(element["barvlDt"])%60 == 0):
-                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"
-                                else:
-                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
-                        else:
-                                time_ = element["barvlDt"]+"초"
-                        embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
-                        if(time_!="0초"):
-                                embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
-                        else:        
-                                embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
-                        embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
-                        embed.add_field(name=element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
-                        embed.add_field(name="---------------------",value="_ _",inline=False)
-                        embed.add_field(name=element["arvlMsg2"][a], value="_ _", inline=False)
-                        embed.add_field(name=element["bstatnNm"][a], value=arrivalCode[element["arvlCd"][a]], inline=False)
-                        embed.set_thumbnail(url=img_number[line[element["subwayId"]]])
-                        embed.set_image(url=img_train[line[element["subwayId"]]])
-                        print(element["subwayId"])
-                        await message.channel.send(embed=embed)       
-                else:       
-                        time.sleep(1)
-                        # 2~9호선만 도착시간 뜸
-                        if(int(element["barvlDt"])>=60):        
-                                time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
-                        else:
-                                time_ = element["barvlDt"]+"초"
-                        embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
-                        if(time_!="0초"):
-                                embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
-                        else:        
-                                embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
-                        embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
-                        embed.add_field(name=element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
-                        if(element["btrainSttus"]!=None):
-                                embed.set_footer(text=element["btrainSttus"])
-                        embed.set_thumbnail(url=img_number[line[element["subwayId"]]])
-                        embed.set_image(url=img_train[line[element["subwayId"]]])
-                        print(element["subwayId"])
-                        await message.channel.send(embed=embed)
+        # for element in result["realtimeArrivalList"]:
+
+                        # time.sleep(0.5)
+                        # # 2~9호선만 도착시간 뜸
+                        # if(int(element["barvlDt"])>=60):        
+                        #         time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
+                        # else:
+                        #         time_ = element["barvlDt"]+"초"
+                        # embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
+                        # if(time_!="0초"):
+                        #         embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
+                        # else:        
+                        #         embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
+                        # embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
+                        # embed.add_field(name=element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
+                        # if(element["btrainSttus"]!=None):
+                        #         embed.set_footer(text=element["btrainSttus"])
+                        # embed.set_thumbnail(url=img_number[line[element["subwayId"]]])
+                        # embed.set_image(url=img_train[line[element["subwayId"]]])
+                        # print(element["subwayId"])
+                        # await message.channel.send(embed=embed)
+        for i in range(len(result["realtimeArrivalList"])):
+                for j in range(len(result["realtimeArrivalList"][i])):
+                        element = result["realtimeArrivalList"][i]
+                        element1 = result["realtimeArrivalList"][j]
+                        if(i!=j and len(result["realtimeArrivalList"])>j):
+                                if(result["realtimeArrivalList"][i]["trainLineNm"]==result["realtimeArrivalList"][j]["trainLineNm"]):
+                                        if(int(element["barvlDt"])>=60):        
+                                                if(int(element["barvlDt"])%60 == 0):
+                                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"
+                                                else:
+                                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
+                                        else:
+                                                time_ = element["barvlDt"]+"초"
+                                        embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
+                                        if(time_!="0초"):
+                                                embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
+                                        else:        
+                                                embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
+                                        embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
+                                        embed.add_field(name="종점 - "+element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
+                                        embed.add_field(name="---------------------",value="_ _",inline=False)
+                                        if(int(element1["barvlDt"])>=60):        
+                                                if(int(element1["barvlDt"])%60 == 0):
+                                                        time_ = str(math.trunc(int(element1["barvlDt"])/60))+"분"
+                                                else:
+                                                        time_ = str(math.trunc(int(element1["barvlDt"])/60))+"분"+str(int(element1["barvlDt"])%60)+"초"
+                                        else:
+                                                time_ = element["barvlDt"]+"초"
+                                        if(time_!="0초"):
+                                                embed.add_field(name=element1["trainLineNm"], value=time_, inline=False)
+                                        else:        
+                                                embed.add_field(name=element1["trainLineNm"], value="_ _", inline=False)
+                                        embed.add_field(name=element1["arvlMsg2"], value="_ _", inline=False)
+                                        embed.add_field(name="종점 - "+element1["bstatnNm"], value=arrivalCode[element1["arvlCd"]], inline=False)
+                                        embed.set_thumbnail(url=img_number[line[element["subwayId"]]])
+                                        embed.set_image(url=img_train[line[element["subwayId"]]])
+                                        print(element["subwayId"])
+                                        await message.channel.send(embed=embed)       
+                        # elif(i==j and len(result["realtimeArrivalList"])>j):
+                        #         print("i:",i)
+                        #         print("j:",j)
+                        #         if(result["realtimeArrivalList"][i]["trainLineNm"]!=result["realtimeArrivalList"][j]["trainLineNm"]):
+                        #                 break
                         
+                        # ㅅㅂ 합치는건 성공 하지만 씨봉방 이거 합친것까지 포함해서 다나옴 인덱스값이 겹치는 것 까지 검사하게 만들어야함 
+                        
+                        else:
+                                print("i:",i)
+                                print("j:",j)
+                                time.sleep(0.5)
+                                # 2~9호선만 도착시간 뜸
+                                if(int(element["barvlDt"])>=60):        
+                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
+                                else:
+                                        time_ = element["barvlDt"]+"초"
+                                embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
+                                if(time_!="0초"):
+                                        embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
+                                else:        
+                                        embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
+                                embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
+                                embed.add_field(name="종점 - "+element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
+                                if(element["btrainSttus"]!=None):
+                                        embed.set_footer(text=element["btrainSttus"])
+                                embed.set_thumbnail(url=img_number[line[element["subwayId"]]])
+                                embed.set_image(url=img_train[line[element["subwayId"]]])
+                                print(element["subwayId"])
+                                await message.channel.send(embed=embed)
+                                break
+                                
                         
     
 

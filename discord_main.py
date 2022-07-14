@@ -38,22 +38,22 @@ img_train = {"1호선":"https://cdn.discordapp.com/attachments/99584640195310389
        "자기부상선":"https://cdn.discordapp.com/attachments/995846401953103894/995846577350512660/6ae5b62834f9bc80.png"
        }
     
-img_number = {"1호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255926988316692/images.png",
-       "2호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255927781040201/images_1.png",
-       "3호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255895182909440/1a9a0538bae6e7a8.png",
-       "4호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255927273541734/1.png",
-       "5호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255927583912018/2.png",
-       "6호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255893488402452/3.png",
-       "7호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255893689733220/4.png",
-       "8호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255893899452466/5.png",
-       "9호선":"https://cdn.discordapp.com/attachments/995846401953103894/996255927994962001/images_2.png",
-       "경의중앙선":"https://cdn.discordapp.com/attachments/995846401953103894/996255894427934820/8.png",
-       "경춘선":"https://cdn.discordapp.com/attachments/995846401953103894/996255894918664212/10.png",
-       "공항철도":"https://cdn.discordapp.com/attachments/995846401953103894/996255894641836082/9.png",
-       "분당선":"https://cdn.discordapp.com/attachments/995846401953103894/996255928183689306/images_3.png",
-       "신분당선":"https://cdn.discordapp.com/attachments/995846401953103894/996255894079815720/6.png",
-       "우이신설선":"https://cdn.discordapp.com/attachments/995846401953103894/996255894255972372/7.pngㅇㅁㅁㅋㅋㅋㅋㅋㅋㅋㅁㅁㅁㅁㅁㅋ",
-       "자기부상선":"https://cdn.discordapp.com/attachments/995846401953103894/996268721574260836/11.png"
+img_number = {"1호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169555602415647/images-removebg-preview-removebg-preview-removebg-preview.png",
+       "2호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169514502434836/images__1_-removebg-preview.png",
+       "3호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169556244148264/-removebg-preview.png",
+       "4호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169514775060590/1_-removebg-preview.png",
+       "5호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169514036867142/2_-removebg-preview.png",
+       "6호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169513793589292/3_-removebg-preview.png",
+       "7호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169513499992165/4_-removebg-preview.png",
+       "8호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169555317194762/5_-removebg-preview.png",
+       "9호선":"https://cdn.discordapp.com/attachments/997167061908336820/997169554654503043/images__2_-removebg-preview.png",
+       "경의중앙선":"https://cdn.discordapp.com/attachments/997167061908336820/997169515039297617/8_preview_rev_1_1.png",
+       "경춘선":"https://cdn.discordapp.com/attachments/997167061908336820/997169515303546960/10_-removebg-preview_preview_rev_1_1.png",
+       "공항철도":"https://cdn.discordapp.com/attachments/997167061908336820/997169556768436254/9_-removebg-preview.png",
+       "분당선":"https://cdn.discordapp.com/attachments/997167061908336820/997169514238185473/images__3_-removebg-preview.png",
+       "신분당선":"https://cdn.discordapp.com/attachments/997167061908336820/997169555937968188/6_-removebg-preview.png",
+       "우이신설선":"https://cdn.discordapp.com/attachments/997167061908336820/997169556499992596/11_-removebg-preview.png",
+       "자기부상선":"https://cdn.discordapp.com/attachments/997167061908336820/997169556499992596/11_-removebg-preview.png"
        }    
     
 client = commands.Bot(command_prefix='!')
@@ -92,13 +92,16 @@ async def on_message(message):
                                         break       
                                 time.sleep(0.5)
                                 # 2~9호선만 도착시간 뜸
-                                if(int(element["barvlDt"])>=60):        
-                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
+                                if(int(element["barvlDt"])>=60):      
+                                        if(int(element["barvlDt"])%60 == 0):
+                                                time_ = str(math.trunc(int(element["barvlDt"])/60))+"분 "
+                                        elif(int(element["barvlDt"])%60 != 0):
+                                                time_ = str(math.trunc(int(element["barvlDt"])/60))+"분 "+str(int(element["barvlDt"])%60)+"초"
                                 else:
                                         time_ = element["barvlDt"]+"초"
                                 embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
                                 if(time_!="0초"):
-                                        embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
+                                        embed.add_field(name=element["trainLineNm"], value="도착까지 남은시간 : "+time_, inline=False)
                                 else:        
                                         embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
                                 embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
@@ -117,13 +120,16 @@ async def on_message(message):
                         for element in result["realtimeArrivalList"]:
                                         time.sleep(0.5)
                                         # 2~9호선만 도착시간 뜸
-                                        if(int(element["barvlDt"])>=60):        
-                                                time_ = str(math.trunc(int(element["barvlDt"])/60))+"분"+str(int(element["barvlDt"])%60)+"초"
+                                        if(int(element["barvlDt"])>=60):      
+                                                if(int(element["barvlDt"])%60 == 0):
+                                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분 "
+                                                elif(int(element["barvlDt"])%60 != 0):
+                                                        time_ = str(math.trunc(int(element["barvlDt"])/60))+"분 "+str(int(element["barvlDt"])%60)+"초"
                                         else:
                                                 time_ = element["barvlDt"]+"초"
                                         embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
                                         if(time_!="0초"):
-                                                embed.add_field(name=element["trainLineNm"], value=time_, inline=False)
+                                                embed.add_field(name=element["trainLineNm"], value="도착까지 남은시간 : "+time_, inline=False)
                                         else:        
                                                 embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
                                         embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)

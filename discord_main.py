@@ -101,11 +101,13 @@ async def on_message(message):
                                         time_ = element["barvlDt"]+"초"
                                 embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
                                 if(time_!="0초"):
-                                        embed.add_field(name=element["trainLineNm"], value="도착까지 남은시간 : "+time_, inline=False)
+                                        embed.add_field(name=element["trainLineNm"].replace(" - ","\n"), value="_ _", inline=False)
+                                        embed.add_field(name="도착까지 남은시간 : "+time_, value="_ _", inline=False)
                                 else:        
-                                        embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
+                                        embed.add_field(name=element["trainLineNm"].replace(" - ","\n"), value="_ _", inline=False)
+                                        embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
                                 embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
-                                embed.add_field(name="종점역-"+element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
+                                embed.add_field(name="종점역 - "+element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
                                 if(element["btrainSttus"]!=None):
                                         embed.set_footer(text=element["btrainSttus"])
                                 embed.set_thumbnail(url=img_number[line[element["subwayId"]]])
@@ -129,11 +131,12 @@ async def on_message(message):
                                                 time_ = element["barvlDt"]+"초"
                                         embed = discord.Embed(title=element["statnNm"], color=0xAAFFFF)
                                         if(time_!="0초"):
-                                                embed.add_field(name=element["trainLineNm"], value="도착까지 남은시간 : "+time_, inline=False)
+                                                embed.add_field(name=element["trainLineNm"].replace(" - ","\n"), value="_ _", inline=False)
+                                                embed.add_field(name="도착까지 남은시간 : "+time_, value="_ _", inline=False)
                                         else:        
-                                                embed.add_field(name=element["trainLineNm"], value="_ _", inline=False)
-                                        embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
-                                        embed.add_field(name="종점역-"+element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
+                                                embed.add_field(name=element["trainLineNm"].replace(" - ","\n"), value="_ _", inline=False)
+                                                embed.add_field(name=element["arvlMsg2"], value="_ _", inline=False)
+                                        embed.add_field(name="종점역 - "+element["bstatnNm"], value=arrivalCode[element["arvlCd"]], inline=False)
                                         if(element["btrainSttus"]!=None):
                                                 embed.set_footer(text=element["btrainSttus"])
                                         embed.set_thumbnail(url=img_number[line[element["subwayId"]]])

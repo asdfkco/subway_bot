@@ -83,8 +83,6 @@ async def on_message(message):
     elif message.content.startswith("!"):
         asdf += 1
         print(asdf)
-        # with open ("./token/신정(은행정).json", "r",encoding="UTF-8") as f:
-        # result = json.load(f)
 
 
         location = message.content.replace("!", "").replace("역", "")
@@ -111,8 +109,6 @@ async def on_message(message):
 
             global time_
             time_ = "_ _"
-            # 마지막으로 겹치는건 2개로해보기
-            # 4개만 제한둔다
             if (len(result["realtimeArrivalList"][1]["subwayList"]) == 1):
                 for element in result["realtimeArrivalList"]:
                     if (num == 4):

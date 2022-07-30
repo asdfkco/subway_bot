@@ -174,10 +174,6 @@ async def on_message(message):
 
         except KeyError as e:
             print(e)
-            if (now.hour >= 0 and now.hour < 6):
-                await message.channel.send("막차가 끊겼거나 존재하지 않는 역입니다.")
-            else:
-                await message.channel.send("존재하지 않는 역입니다.")
 
 
 client.run(token["token"])

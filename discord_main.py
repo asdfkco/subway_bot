@@ -58,7 +58,7 @@ img_number = {
     "자기부상선": "https://cdn.discordapp.com/attachments/997167061908336820/997169556499992596/11_-removebg-preview.png"
     }
 
-client = commands.Bot(command_prefix='!')
+client = commands.Bot(command_prefix='!',intents=discord.Intents.all())
 
 
 @client.event
@@ -81,8 +81,6 @@ async def on_message(message):
         embed.set_footer(text="잘사용해주세요!!")
         await message.channel.send(embed=embed)
     elif message.content.startswith("!"):
-        asdf += 1
-        print(asdf)
 
 
         location = message.content.replace("!", "").replace("역", "")
